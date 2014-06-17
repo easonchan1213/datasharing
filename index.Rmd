@@ -1,0 +1,63 @@
+---
+title       :  Predict wine prices
+subtitle    :  replace expert with statistics 
+author      :  Eason
+job         :  Analyst on keyboard
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Read data from wine.csv
+```{r}
+wine = read.csv("wine.csv")
+```
+Take a look at the data
+```{r}
+summary(wine)
+```
+
+--- .class #id 
+
+## Fit multivariate regression model on wine price
+```{r}
+model = lm(Price ~ AGST + HarvestRain + WinterRain + Age, data=wine)
+summary(model)[4]
+```
+Here you can see the most important factor amongst all is AGST, of which coefficienct is 0.607. Age, to our surprise, does not affect as much as AGST does.
+
+
+
+--- .class #id 
+
+## Test our regression model
+```{r}
+wineTest = read.csv("wine_test.csv")
+predictTest = predict(model, newdata=wineTest)
+```
+Take a look at out-of-sample error
+```{r}
+sum((wineTest$Price - predictTest)^2)
+```
+
+Compare it with in-sample error
+```{r}
+sum(model$residuals^2)
+```
+
+
+--- .class #id 
+
+## Conclusion
+As you can see, the prediction is pretty impressive.
+You want to buy great wine but being afraid of getting ripped off?
+
+
+
+
+# Predict it!
+
+--- .class #id 

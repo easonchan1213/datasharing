@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Predict wine prices</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Predict wine prices">
+  <meta name="author" content="Eason">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Predict wine prices</h1>
+    <h2>replace expert with statistics</h2>
+    <p>Eason<br/>Analyst on keyboard</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Read data from wine.csv</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">wine = read.csv(&quot;wine.csv&quot;)
+</code></pre>
+
+<p>Take a look at the data</p>
+
+<pre><code class="r">summary(wine)
+</code></pre>
+
+<pre><code>##       Year          Price        WinterRain       AGST       HarvestRain 
+##  Min.   :1952   Min.   :6.21   Min.   :376   Min.   :15.0   Min.   : 38  
+##  1st Qu.:1960   1st Qu.:6.52   1st Qu.:536   1st Qu.:16.2   1st Qu.: 89  
+##  Median :1966   Median :7.12   Median :600   Median :16.5   Median :130  
+##  Mean   :1966   Mean   :7.07   Mean   :605   Mean   :16.5   Mean   :149  
+##  3rd Qu.:1972   3rd Qu.:7.50   3rd Qu.:697   3rd Qu.:17.1   3rd Qu.:187  
+##  Max.   :1978   Max.   :8.49   Max.   :830   Max.   :17.6   Max.   :292  
+##       Age         FrancePop    
+##  Min.   : 5.0   Min.   :43184  
+##  1st Qu.:11.0   1st Qu.:46584  
+##  Median :17.0   Median :50255  
+##  Mean   :17.2   Mean   :49694  
+##  3rd Qu.:23.0   3rd Qu.:52894  
+##  Max.   :31.0   Max.   :54602
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Fit multivariate regression model on wine price</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">model = lm(Price ~ AGST + HarvestRain + WinterRain + Age, data = wine)
+summary(model)[4]
+</code></pre>
+
+<pre><code>## $coefficients
+##              Estimate Std. Error t value  Pr(&gt;|t|)
+## (Intercept) -3.429980  1.7658975  -1.942 6.631e-02
+## AGST         0.607209  0.0987022   6.152 5.197e-06
+## HarvestRain -0.003972  0.0008538  -4.652 1.538e-04
+## WinterRain   0.001076  0.0005073   2.120 4.669e-02
+## Age          0.023931  0.0080969   2.956 7.819e-03
+</code></pre>
+
+<p>Here you can see the most important factor amongst all is AGST, of which coefficienct is 0.607. Age, to our surprise, does not affect as much as AGST does.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Test our regression model</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">wineTest = read.csv(&quot;wine_test.csv&quot;)
+predictTest = predict(model, newdata = wineTest)
+</code></pre>
+
+<p>Take a look at out-of-sample error</p>
+
+<pre><code class="r">sum((wineTest$Price - predictTest)^2)
+</code></pre>
+
+<pre><code>## [1] 0.06926
+</code></pre>
+
+<p>Compare it with in-sample error</p>
+
+<pre><code class="r">sum(model$residuals^2)
+</code></pre>
+
+<pre><code>## [1] 1.74
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Conclusion</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>As you can see, the prediction is pretty impressive.
+You want to buy great wine but being afraid of getting ripped off?</p>
+
+<h1>Predict it!</h1>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Read data from wine.csv'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Fit multivariate regression model on wine price'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Test our regression model'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Conclusion'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title=''>
+         5
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
